@@ -4,7 +4,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     
-    <asp:UpdatePanel runat="server" ChildrenAsTriggers="False" UpdateMode="Conditional">
+    <asp:UpdatePanel runat="server">
         <ContentTemplate>
             <div id="errors" style="background: #c00; color: #fff; display: none; margin: -20px -20px 20px; padding: 20px; white-space: pre-wrap;"></div>
             <m:Game runat="server" ID="GameControl"></m:Game>

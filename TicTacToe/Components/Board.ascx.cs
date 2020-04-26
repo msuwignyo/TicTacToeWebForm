@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 
@@ -9,30 +10,10 @@ namespace TicTacToe.Components
 {
     public partial class Board : UserControl
     {
-        public static string Status { get; set; }
-        public static string[] Squares { get; set; }
-        public bool XIsNext { get; set; }
-
-        protected override void OnInit(EventArgs e)
-        {
-            if (!IsPostBack)
-            {
-                Squares = Enumerable.Repeat<string>(null, 9).ToArray();
-                XIsNext = true;
-
-                Session["squares"] = Squares;
-                Session["xIsNext"] = XIsNext;
-            }
-            else
-            {
-                Squares = (string[])Session["squares"];
-                XIsNext = (bool)Session["xIsNext"];
-            }
-
-            Status = "Next player: " + (XIsNext ? "X" : "O");
-
-            base.OnInit(e);
-        }
+        // props
+        public string[] Squares { get; set; }
+        public Action<int> OnClick { get; set; }
+        // -----
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -47,36 +28,17 @@ namespace TicTacToe.Components
             Square8.Controls.Add(RenderSquare(8));
         }
 
-        protected void HandleClick(int i)
+        protected override void Render(HtmlTextWriter writer)
         {
-            Squares = Squares.Select((item, index) =>
+            for (int i = 0; i < 9; i++)
             {
-                var tempItem = item;
-                var tempControl = (Square)FindControl($"Square{i}").Controls[0];
+                var tempControl =
+                    (Square)FindControl($"Square{i}").Controls[0];
 
-                if (index == i)
-                {
-                    tempItem = XIsNext ? "X" : "O";
-                    tempControl.Value = tempItem;
-                }
-
-                return tempItem;
-            }).ToArray();
-
-            XIsNext = !XIsNext;
-            Session["squares"] = Squares;
-            Session["xIsNext"] = XIsNext;
-
-            var winner = Helpers.CalculateWinner(Squares);
-
-            if (winner != null)
-            {
-                Status = $"Winner: {winner}";
+                tempControl.Value = Squares[i];
             }
-            else
-            {
-                Status = "Next player: " + (XIsNext ? "X" : "O");
-            }
+
+            base.Render(writer);
         }
 
         private Square RenderSquare(int i)
@@ -84,7 +46,7 @@ namespace TicTacToe.Components
             var square = (Square) LoadControl("~/Components/Square.ascx");
 
             square.Value = Squares[i];
-            square.ClickSquare = () => HandleClick(i);
+            square.ClickSquare = () => OnClick(i);
 
             return square;
         }

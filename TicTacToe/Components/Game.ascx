@@ -1,14 +1,29 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Game.ascx.cs" Inherits="TicTacToe.Components.Game" %>
-<%@ Register src="Board.ascx" tagPrefix="m" tagName="Board" %>
+<%@ Register Src="Board.ascx" TagPrefix="m" TagName="Board" %>
 
-<asp:UpdatePanel runat="server" class="game" UpdateMode="Conditional">
-    <ContentTemplate>
-        <div class="game-board">
-            <m:Board runat="server" ID="BoardControl"></m:Board>
-        </div>
-        <div class="game-info">
-            <div></div>
-            <ol></ol>
-        </div>
-    </ContentTemplate>
-</asp:UpdatePanel>
+<div class="game">
+    <div class="game-board">
+        <m:Board runat="server" ID="BoardControl" />
+    </div>
+    <div class="game-info">
+        <div runat="server" ID="Status"></div>
+        <asp:Repeater runat="server" 
+                      ID="HistoryRepeater"
+                      OnItemDataBound="HistoryRepeater_OnItemDataBound">
+            <HeaderTemplate>
+                <ol>
+            </HeaderTemplate>
+            <ItemTemplate>
+                <li runat="server" 
+                    ID="HistoryItem">
+                    <button runat="server" 
+                            ID="HistoryItemButton">
+                    </button>
+                </li>
+            </ItemTemplate>
+            <FooterTemplate>
+            </ol>
+            </FooterTemplate>
+        </asp:Repeater>
+    </div>
+</div>
