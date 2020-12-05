@@ -1,54 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Web;
-using System.Web.Services;
 using System.Web.UI;
 
 namespace TicTacToe.Components
 {
     public partial class Board : UserControl
     {
-        // props
-        public string[] Squares { get; set; }
-        public Action<int> OnClick { get; set; }
-        // -----
+        public IEnumerable<string> Squares
+        {
+            get => (IEnumerable<string>) Session[UniqueID + "Squares"];
+            set
+            {
+                Session[UniqueID + "Squares"] = value;
+                RenderSquares();
+            }
+        }
+
+        public event EventHandler<SquareClickEventArgs> Click;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            Square0.Controls.Add(RenderSquare(0));
-            Square1.Controls.Add(RenderSquare(1));
-            Square2.Controls.Add(RenderSquare(2));
-            Square3.Controls.Add(RenderSquare(3));
-            Square4.Controls.Add(RenderSquare(4));
-            Square5.Controls.Add(RenderSquare(5));
-            Square6.Controls.Add(RenderSquare(6));
-            Square7.Controls.Add(RenderSquare(7));
-            Square8.Controls.Add(RenderSquare(8));
-        }
-
-        protected override void Render(HtmlTextWriter writer)
-        {
-            for (int i = 0; i < 9; i++)
+            if (!IsPostBack)
             {
-                var tempControl =
-                    (Square)FindControl($"Square{i}").Controls[0];
-
-                tempControl.Value = Squares[i];
+                Squares = Enumerable.Range(0, 9)
+                    .Select(item => default(string));
             }
 
-            base.Render(writer);
+            Enumerable.Range(0, 9)
+                .ToList()
+                .ForEach(elm =>
+                {
+                    var ucSquare = (Square) FindControl($"ucSquare{elm}");
+
+                    ucSquare.Click += (o, evt)
+                        => Click?.Invoke(o, new SquareClickEventArgs(elm));
+                });
         }
 
-        private Square RenderSquare(int i)
+        private void RenderSquares()
         {
-            var square = (Square) LoadControl("~/Components/Square.ascx");
+            Enumerable.Range(0, 9)
+                .ToList()
+                .ForEach(elm =>
+                {
+                    var ucSquare =
+                        (Square) FindControl($"ucSquare{elm}");
 
-            square.Value = Squares[i];
-            square.ClickSquare = () => OnClick(i);
-
-            return square;
+                    ucSquare.Value = Squares.ElementAt(elm);
+                });
         }
     }
 }

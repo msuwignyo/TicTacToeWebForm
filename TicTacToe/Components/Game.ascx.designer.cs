@@ -15,30 +15,39 @@ namespace TicTacToe.Components
     {
 
         /// <summary>
-        /// BoardControl control.
+        /// upGame control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::TicTacToe.Components.Board BoardControl;
+        protected global::System.Web.UI.UpdatePanel upGame;
 
         /// <summary>
-        /// Status control.
+        /// ucBoard control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Status;
+        protected global::TicTacToe.Components.Board ucBoard;
 
         /// <summary>
-        /// HistoryRepeater control.
+        /// ltlStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater HistoryRepeater;
+        protected global::System.Web.UI.WebControls.Literal ltlStatus;
+
+        /// <summary>
+        /// rptHistories control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptHistories;
     }
 }

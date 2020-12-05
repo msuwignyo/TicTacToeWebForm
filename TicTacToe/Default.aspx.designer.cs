@@ -15,12 +15,21 @@ namespace TicTacToe
     {
 
         /// <summary>
-        /// GameControl control.
+        /// upDefault control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::TicTacToe.Components.Game GameControl;
+        protected global::System.Web.UI.UpdatePanel upDefault;
+
+        /// <summary>
+        /// ucGame control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::TicTacToe.Components.Game ucGame;
     }
 }

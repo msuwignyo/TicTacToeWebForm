@@ -7,25 +7,27 @@ namespace TicTacToe
 {
     public class Helpers
     {
-        public static string CalculateWinner(string[] squares)
+        public static string CalculateWinner(List<string> squares)
         {
-            var lines = new List<(int, int, int)>
+            var lines = new[]
             {
-                (0, 1, 2),
-                (3, 4, 5),
-                (6, 7, 8),
-                (0, 3, 6),
-                (1, 4, 7),
-                (2, 5, 8),
-                (0, 4, 8),
-                (2, 4, 6)
+                new[] { 0, 1, 2 },
+                new[] { 3, 4, 5 },
+                new[] { 6, 7, 8 },
+                new[] { 0, 3, 6 },
+                new[] { 1, 4, 7 },
+                new[] { 2, 5, 8 },
+                new[] { 0, 4, 8 },
+                new[] { 2, 4, 6 },
             };
 
             foreach (var line in lines)
             {
-                var (a, b, c) = line;
-                if (squares[a] != null && squares[a] == squares[b] &&
-                    squares[a] == squares[c])
+                var a = line[0];
+                var b = line[1];
+                var c = line[2];
+
+                if (!string.IsNullOrEmpty(squares[a]) && squares[a] == squares[b] && squares[a] == squares[c])
                 {
                     return squares[a];
                 }

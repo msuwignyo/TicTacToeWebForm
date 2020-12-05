@@ -1,13 +1,16 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="TicTacToe._Default" %>
-
 <%@ Register Src="Components/Game.ascx" TagPrefix="m" TagName="Game" %>
 
-<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    
-    <asp:UpdatePanel runat="server">
+<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" 
+             runat="server">
+
+    <asp:UpdatePanel runat="server" 
+                     UpdateMode="Conditional"
+                     ChildrenAsTriggers="False"
+                     ID="upDefault">
         <ContentTemplate>
             <div id="errors" style="background: #c00; color: #fff; display: none; margin: -20px -20px 20px; padding: 20px; white-space: pre-wrap;"></div>
-            <m:Game runat="server" ID="GameControl"></m:Game>
+            <m:Game runat="server" ID="ucGame"></m:Game>
         </ContentTemplate>
     </asp:UpdatePanel>
 

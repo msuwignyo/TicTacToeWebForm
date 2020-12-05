@@ -15,84 +15,93 @@ namespace TicTacToe.Components
     {
 
         /// <summary>
-        /// Square0 control.
+        /// upBoard control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder Square0;
+        protected global::System.Web.UI.UpdatePanel upBoard;
 
         /// <summary>
-        /// Square1 control.
+        /// ucSquare0 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder Square1;
+        protected global::TicTacToe.Components.Square ucSquare0;
 
         /// <summary>
-        /// Square2 control.
+        /// ucSquare1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder Square2;
+        protected global::TicTacToe.Components.Square ucSquare1;
 
         /// <summary>
-        /// Square3 control.
+        /// ucSquare2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder Square3;
+        protected global::TicTacToe.Components.Square ucSquare2;
 
         /// <summary>
-        /// Square4 control.
+        /// ucSquare3 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder Square4;
+        protected global::TicTacToe.Components.Square ucSquare3;
 
         /// <summary>
-        /// Square5 control.
+        /// ucSquare4 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder Square5;
+        protected global::TicTacToe.Components.Square ucSquare4;
 
         /// <summary>
-        /// Square6 control.
+        /// ucSquare5 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder Square6;
+        protected global::TicTacToe.Components.Square ucSquare5;
 
         /// <summary>
-        /// Square7 control.
+        /// ucSquare6 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder Square7;
+        protected global::TicTacToe.Components.Square ucSquare6;
 
         /// <summary>
-        /// Square8 control.
+        /// ucSquare7 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder Square8;
+        protected global::TicTacToe.Components.Square ucSquare7;
+
+        /// <summary>
+        /// ucSquare8 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::TicTacToe.Components.Square ucSquare8;
     }
 }

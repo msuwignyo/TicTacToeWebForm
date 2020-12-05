@@ -8,159 +8,128 @@ using System.Web.UI.WebControls;
 
 namespace TicTacToe.Components
 {
+    public class SquareClickEventArgs : EventArgs
+    {
+        public int Index { get; set; }
+
+        public SquareClickEventArgs(int index)
+        {
+            Index = index;
+        }
+    }
+
+    public class History
+    {
+        public IEnumerable<string> Squares { get; set; }
+    }
+
     public partial class Game : System.Web.UI.UserControl
     {
-        // state
-        public static List<string[]> History { get; set; }
-        public static int StepNumber { get; set; }
-        public static bool XIsNext { get; set; }
-        // -----
-
-        protected override void OnInit(EventArgs e)
+        public IEnumerable<History> Histories
         {
-            if (!IsPostBack) // only called first time
-            {
-                var tempSquares = Enumerable.Repeat<string>(null, 9).ToArray();
-
-                History = new List<string[]> { tempSquares };
-                XIsNext = true;
-                StepNumber = 0;
-            }
-
-            base.OnInit(e);
+            get => (IEnumerable<History>) Session[UniqueID + "History"]; 
+            set => Session[UniqueID + "History"] = value;
         }
 
-        protected void HandleClick(int i)
+        public int StepNumber
         {
-            var history = History;
-            var current = history.Last();
-            var squares = new string[current.Length];
-            current.CopyTo(squares, 0);
-
-            // ignore if someone has won the game or if
-            // a Square is already filled
-            if (Helpers.CalculateWinner(current) != null || current[i] != null)
-            {
-                return;
-            }
-
-            squares[i] = XIsNext ? "X" : "O";
-
-            // set state
-            History.Add(squares);
-            StepNumber = History.Count;
-            XIsNext = !XIsNext;
-
-
-            // karena data-nya berubah, perlu diatur ulang data-nya
-
-            var winner = Helpers.CalculateWinner(current);
-
-            var moves = history.Select((step, move) => new
-            {
-                move,
-                desc = move == 0 ? "Go to game start" : $"Go to move #{move}"
-            });
-
-            HistoryRepeater.DataSource = moves;
-            HistoryRepeater.DataBind();
-
-            if (winner != null)
-            {
-                Status.InnerText = $"Winner: {winner}";
-            }
-            else
-            {
-                Status.InnerText = "Next player: " + (XIsNext ? "X" : "O");
-            }
-
-            BoardControl.Squares = squares;
-            BoardControl.OnClick = HandleClick;
+            get => (int) Session[UniqueID + "StepNumber"]; 
+            set => Session[UniqueID + "StepNumber"] = value;
         }
 
-        protected void JumpTo(int stepNo)
+        public bool XIsNext
         {
-            // set state
-            StepNumber = stepNo;
-            XIsNext = (StepNumber % 2) == 0;
-            History = History.GetRange(0, StepNumber + 1);
+            get => (bool) Session[UniqueID + "XIsNext"]; 
+            set => Session[UniqueID + "XIsNext"] = value;
+        }
 
-            // karena data-nya berubah, perlu diatur ulang data-nya
-
-            var history = History;
-            var current = history.Last();
-            var squares = new string[current.Length];
-            current.CopyTo(squares, 0);
-            var winner = Helpers.CalculateWinner(current);
-
-            var moves = history.Select((step, move) => new
-            {
-                move,
-                desc = move == 0 ? "Go to game start" : $"Go to move #{move}"
-            });
-
-            HistoryRepeater.DataSource = moves;
-            HistoryRepeater.DataBind();
-
-            if (winner != null)
-            {
-                Status.InnerText = $"Winner: {winner}";
-            }
-            else
-            {
-                Status.InnerText = "Next player: " + (XIsNext ? "X" : "O");
-            }
-
-            BoardControl.Squares = squares;
-            BoardControl.OnClick = HandleClick;
-            BoardControl.DataBind();
-
-            //Page.Response.Redirect(Page.Request.Url.ToString(), true);
+        public string Status
+        {
+            get => ltlStatus.Text;
+            set => ltlStatus.Text = value;
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            var history = History;
-            var current = history.Last();
-            var winner = Helpers.CalculateWinner(current);
-
-            var moves = history.Select((step, move) => new
+            if (!IsPostBack)
             {
-                move,
-                desc = move == 0 ? "Go to game start" : $"Go to move #{move}"
-            });
+                Histories = new History[]
+                {
+                    new History
+                    {
+                        Squares = Enumerable.Range(0, 9)
+                            .Select(item => default(string))
+                    }
+                };
 
-            HistoryRepeater.DataSource = moves;
-            HistoryRepeater.DataBind();
+                StepNumber = 0;
+                XIsNext = true;
+            }
 
-            if (winner != null)
+            ucBoard.Click += HandleClick;
+        }
+
+        protected override void OnPreRender(EventArgs e)
+        {
+            var histories = Histories.ToList();
+            var current = histories[StepNumber];
+            var squares = current.Squares.ToList();
+
+            var winner = Helpers.CalculateWinner(squares.ToList());
+
+            rptHistories.DataSource = histories.Select((step, move) 
+                => move != 0 ? $"Go to move #{move}" : "Go to game start");
+            
+            rptHistories.DataBind();
+
+            if (!string.IsNullOrEmpty(winner))
             {
-                Status.InnerText = $"Winner: {winner}";
+                Status = "Winner: " + winner;
             }
             else
             {
-                Status.InnerText = "Next player: " + (XIsNext ? "X" : "O");
+                Status = "Next player: " + (XIsNext ? "X" : "O");
             }
 
-            BoardControl.Squares = current;
-            BoardControl.OnClick = HandleClick;
+            ucBoard.Squares = current.Squares;
+
+            base.OnPreRender(e);
         }
 
-        protected void HistoryRepeater_OnItemDataBound(object sender, RepeaterItemEventArgs e)
+        protected void HandleClick(object sender, SquareClickEventArgs e)
         {
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            var histories = Histories.Take(StepNumber + 1).ToList();
+            var current = histories.Last();
+            var squares = current.Squares.ToList();
+
+            if (Helpers.CalculateWinner(squares) != null || !string.IsNullOrEmpty(squares[e.Index]))
             {
-                dynamic data = e.Item.DataItem;
-                var move = (int)data.move;
-                var desc = (string)data.desc;
-
-                var historyItem = (HtmlGenericControl)e.Item.FindControl("HistoryItem");
-                var historyItemButton = (HtmlButton)e.Item.FindControl("HistoryItemButton");
-
-                historyItem.Attributes["key"] = move.ToString();
-                historyItemButton.InnerText = desc;
-                historyItemButton.ServerClick += (o, args) => JumpTo(move);
+                return;
             }
+
+            squares[e.Index] = XIsNext ? "X" : "O";
+
+            histories.Add(new History { Squares = squares });
+
+            Histories = histories;
+            StepNumber = histories.Count - 1;
+            XIsNext = !XIsNext;
+
+            upGame.Update();
+        }
+
+        protected void btnHistory_OnServerClick(object sender, EventArgs e)
+        {
+            // controls
+            var btnHistory = (HtmlButton) sender;
+
+            // data
+            var rptItemHistory = (RepeaterItem) btnHistory.NamingContainer;
+
+            StepNumber = rptItemHistory.ItemIndex;
+            XIsNext = StepNumber % 2 == 0;
+
+            upGame.Update();
         }
     }
 }

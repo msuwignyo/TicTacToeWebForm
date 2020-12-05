@@ -9,18 +9,27 @@ namespace TicTacToe.Components
 {
     public partial class Square : System.Web.UI.UserControl
     {
-        // props
-        public string Value { get; set; }
-        public Action ClickSquare { get; set; }
-        // -----
+        public string Value
+        {
+            get => (string) Session[UniqueID + "Value"]; 
+            set => Session[UniqueID + "Value"] = value;
+        }
+
+        public event EventHandler Click;
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                Value = null;
+            }
+
+            //btnSquare.ServerClick += Click;
         }
 
-        protected void OnServerClick(object sender, EventArgs e)
+        protected void btnSquare_OnServerClick(object sender, EventArgs e)
         {
-            ClickSquare();
+            Click?.Invoke(sender, e);
         }
     }
 }
